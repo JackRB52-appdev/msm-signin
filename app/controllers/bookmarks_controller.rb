@@ -1,6 +1,8 @@
 class BookmarksController < ApplicationController
+
   def index
-    matching_bookmarks = Bookmark.all
+
+    matching_bookmarks = @current_user.bookmarks
 
     @list_of_bookmarks = matching_bookmarks.order({ :created_at => :desc })
 
@@ -8,6 +10,7 @@ class BookmarksController < ApplicationController
   end
 
   def show
+
     the_id = params.fetch("path_id")
 
     matching_bookmarks = Bookmark.where({ :id => the_id })
@@ -19,7 +22,7 @@ class BookmarksController < ApplicationController
 
   def create
     the_bookmark = Bookmark.new
-    the_bookmark.user_id = params.fetch("query_user_id")
+    the_bookmark.user_id = session.fetch(:user_id)
     the_bookmark.movie_id = params.fetch("query_movie_id")
 
     if the_bookmark.valid?
@@ -31,6 +34,7 @@ class BookmarksController < ApplicationController
   end
 
   def update
+
     the_id = params.fetch("path_id")
     the_bookmark = Bookmark.where({ :id => the_id }).at(0)
 
